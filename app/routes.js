@@ -261,10 +261,10 @@ module.exports = function (app, passport) {
 
 
 
-  app.get('*', function (req, res) {
-    // res.send('Page Not found!');
-    res.sendFile(path.join(__dirname, 'dist/index.html'));
-  });
+  // app.get('*', function (req, res) {
+  //   // res.send('Page Not found!');
+  //   res.sendFile(path.join(__dirname, 'dist/index.html'));
+  // });
 
 
 };
