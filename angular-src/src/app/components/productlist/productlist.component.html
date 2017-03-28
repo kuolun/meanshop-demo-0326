@@ -6,7 +6,7 @@
 </div>
 
 
-<!--目錄-->
+<!--目錄下拉選單-->
 <div class="row">
   <div class="col-md-2">
     <select #c class="form-control" (change)="reloadProducts({id:c.value})">
@@ -19,7 +19,7 @@
 </div>
 <hr>
 
-<!--產品-->
+<!--產品清單-->
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-4" *ngFor="let product of products">
