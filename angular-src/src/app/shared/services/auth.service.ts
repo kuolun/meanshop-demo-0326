@@ -21,23 +21,45 @@ export class AuthService {
     // authResults內會有JWT
     this.lock.on("authenticated", (authResult) => {
 
+      //authenticated包含登入及sign up
+
+
+
       //Auth0驗證過後，用accessToken取得user profile
       this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
         if (error) {
           throw new Error(error);
         }
 
-        //將Auth0提供的user profile存到DB
-        this.createUser(profile)
-          .subscribe(
-          data => {
-            console.log('save localstorage ...');
-            localStorage.setItem('id_token', authResult.idToken);
-            //db回傳的存到localStorage
-            localStorage.setItem('profile', JSON.stringify(data.savedUser));
-            this.userProfile = data.savedUser;
-          },
-          err => this.logout());
+        //檢查是否為登入
+        this.checkDBUser(profile)
+          .subscribe(data => {
+            console.log(data.user)
+            if (!data.user) {
+              //如果db不存在此user
+              //將Auth0提供的user profile存到DB
+              this.createUser(profile)
+                .subscribe(
+                data => {
+                  console.log('save localstorage ...');
+                  localStorage.setItem('id_token', authResult.idToken);
+                  //db回傳的存到localStorage
+                  localStorage.setItem('profile', JSON.stringify(data.savedUser));
+                  this.userProfile = data.savedUser;
+                },
+                err => this.logout());
+            } else {
+              console.log('User already in DB,load user data');
+              this.loadUser(profile)
+                .subscribe(data => {
+                  console.log('LoadedUser:', data.loadedUser);
+                  // 把載入的user存到localStorage
+                  localStorage.setItem('id_token', authResult.idToken);
+                  localStorage.setItem('profile', JSON.stringify(data.loadedUser));
+                  this.userProfile = data.loadedUser;
+                });
+            }
+          });
       });
     });
   }
@@ -58,6 +80,14 @@ export class AuthService {
 
     //body要轉成string,headers要用物件
     return this._http.post('http://localhost:3000/newUser', bodyString, options)
+      .map(res => res.json());
+  }
+
+  /**
+   * Check User是否存在DB
+   */
+  checkDBUser(profile) {
+    return this._http.get(`http://localhost:3000/checkDBUser/${profile.email}`)
       .map(res => res.json());
   }
 
