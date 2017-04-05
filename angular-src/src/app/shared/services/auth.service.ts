@@ -85,6 +85,7 @@ export class AuthService {
 
   /**
    * 載入DB User資料
+   * 把productId換成實際product資料
    */
   loadUser(profile) {
     return this._http.get(`http://localhost:3000/user/${profile.email}`)

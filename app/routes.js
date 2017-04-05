@@ -9,6 +9,10 @@ module.exports = function (app, passport) {
   var User = require('./models/user');
 
 
+  // Stripe secret Key
+  var Stripe = require('stripe')('sk_test_ZPTLcTtpDPvz3ZNkLt707GU4');
+
+
   //localhost:3000/api/productName
   app.get('/about', function (req, res) {
     console.log(req.session);
