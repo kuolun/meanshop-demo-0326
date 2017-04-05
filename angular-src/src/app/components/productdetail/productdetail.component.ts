@@ -14,6 +14,7 @@ export class ProductdetailComponent implements OnInit {
 
   quantity = 1;
 
+
   constructor(
     private _route: ActivatedRoute,
     private _http: Http,
@@ -30,9 +31,6 @@ export class ProductdetailComponent implements OnInit {
       .subscribe(product => {
         this.product = product;
       });
-
-    console.log(`quantity:${this.quantity}`);
-    console.log(`userProfile:${this._auth.userProfile.data.cart}`);
   }
 
   // 購買數量
@@ -60,11 +58,6 @@ export class ProductdetailComponent implements OnInit {
     //購物車資料
     let cartData = this._auth.userProfile.data;
 
-    console.info('quantity:', this.quantity);
-    console.info('product.price:', this.product.price);
-    console.info('subtotal:', this.subtotal());
-    console.log('OldtotalValue', cartData.totalValue);
-
     //購買產品的資料
     var item = {
       product: this.product._id,
@@ -77,8 +70,6 @@ export class ProductdetailComponent implements OnInit {
 
     //增加cartData的總金額
     cartData.totalValue += this.subtotal();
-
-    console.log('totalValue', cartData.totalValue);
 
     //更新DB(async)
     //傳入的資料為item，會放在req.body內

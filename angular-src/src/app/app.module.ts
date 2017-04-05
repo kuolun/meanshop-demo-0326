@@ -19,9 +19,9 @@ import 'rxjs/add/operator/map';
 const appRoutes: Routes = [
   { path: 'product/:id', component: ProductdetailComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'cart', component: CartComponent },
   { path: '', component: ProductlistComponent, pathMatch: 'full' },
   { path: 'prodcutdetail', component: ProductdetailComponent },
-  { path: 'cart', component: CartComponent }
 ];
 
 

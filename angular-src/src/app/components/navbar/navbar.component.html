@@ -8,21 +8,21 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-      <a class="navbar-brand" href="#">MEAN Shop</a>
+      <a class="navbar-brand" [routerLink]="['/']">MEAN Shop</a>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-left">
         <li><a [routerLink]="['/']">Home</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li *ngIf="auth.authenticated()">
-          <a routerLink="/checkout" class="glyphicon glyphicon-shopping-cart">
+        <li *ngIf="_auth.authenticated()">
+          <a routerLink="/cart" class="glyphicon glyphicon-shopping-cart">
             <span class="badge">{{sum()}}</span>
           </a>
         </li>
-        <li><a *ngIf="!auth.authenticated()" (click)="auth.login()">LogIn</a></li>
-        <li><a *ngIf="auth.authenticated()" (click)="auth.logout()">LogOut</a></li>
-        <li><a *ngIf="auth.authenticated()" [routerLink]="['/profile']">Profile</a></li>
+        <li><a *ngIf="!_auth.authenticated()" (click)="_auth.login()">LogIn</a></li>
+        <li><a *ngIf="_auth.authenticated()" (click)="_auth.logout()">LogOut</a></li>
+        <li><a *ngIf="_auth.authenticated()" [routerLink]="['/profile']">Profile</a></li>
       </ul>
     </div>
     <!--/.nav-collapse -->
