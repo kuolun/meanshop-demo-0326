@@ -8,21 +8,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
+  //購物車內item數
+  itemCount = 0;
+
   constructor(private _auth: AuthService) { }
 
   ngOnInit() {
+    console.log('userProfile:', this._auth.userProfile);
   }
 
 
-  sum() {
-    //取出購物車資料
-    let cart = this._auth.userProfile.data.cart
-    let sum = 0;
-    cart.forEach(item => {
-      sum += item.quantity;
-    });
-
-    return sum;
+  countItem() {
+    // if (this._auth.userProfile.data.cart.length > 0) {
+    //   //加總購物車item數
+    //   this._auth.userProfile.data.cart.forEach(item => {
+    //     this.itemCount += item.quantity;
+    //   });
+    // }
+    return this.itemCount;
   }
 
 }

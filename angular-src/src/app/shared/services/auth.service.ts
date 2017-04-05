@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { tokenNotExpired } from 'angular2-jwt'
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import { Router } from '@angular/router';
 
 declare var Auth0Lock: any;
@@ -27,58 +27,37 @@ export class AuthService {
           throw new Error(error);
         }
 
-        //檢查user是否已經存在於DB
-        //否=>建立user
-        //是=>載入user
-
-        // 呼叫checkDBUser()檢查
-        if (!this.checkDBUser(profile)) {
-          // 不存在DB，建立一筆
-          this.createUser(profile)
-            .subscribe(
-            data => {
-              localStorage.setItem('id_token', authResult.idToken);
-              localStorage.setItem('profile', JSON.stringify(data.savedUser));
-              this.userProfile = data.savedUser;
-            },
-            err => {
-              this.logout();
-            });
-        } else {
-          //已存在DB內，用loadUser載入資料
-          this.loadUser(profile)
-            .subscribe(data => {
-              localStorage.setItem('id_token', authResult.idToken);
-              localStorage.setItem('profile', JSON.stringify(data.loadedUser));
-              this.userProfile = data.loadedUser;
-            })
-        }
+        //將Auth0提供的user profile存到DB
+        this.createUser(profile)
+          .subscribe(
+          data => {
+            console.log('save localstorage ...');
+            localStorage.setItem('id_token', authResult.idToken);
+            //db回傳的存到localStorage
+            localStorage.setItem('profile', JSON.stringify(data.savedUser));
+            this.userProfile = data.savedUser;
+          },
+          err => this.logout());
       });
     });
   }
 
 
-  /**
-   * Check User是否存在DB
-   */
-  checkDBUser(profile) {
-    return this._http.get(`http://localhost:3000/checkDBUser/${profile.email}`)
-      .map(res => res.json())
-      .subscribe(data => data.user ? true : false);
-  }
+
 
   /**
    * Create a user
    */
 
   createUser(profile) {
+    console.log("createing user...");
     // 加上header info
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    let bodyString = JSON.stringify(profile);
 
     //body要轉成string,headers要用物件
-    return this._http.post('http://localhost:3000/newUser',
-      profile, { headers: headers })
+    return this._http.post('http://localhost:3000/newUser', bodyString, options)
       .map(res => res.json());
   }
 

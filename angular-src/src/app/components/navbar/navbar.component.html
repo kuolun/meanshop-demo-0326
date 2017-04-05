@@ -17,7 +17,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li *ngIf="_auth.authenticated()">
           <a routerLink="/cart" class="glyphicon glyphicon-shopping-cart">
-            <span class="badge">{{sum()}}</span>
+            <span class="badge">{{countItem()}}</span>
           </a>
         </li>
         <li><a *ngIf="!_auth.authenticated()" (click)="_auth.login()">LogIn</a></li>

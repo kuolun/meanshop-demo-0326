@@ -35,10 +35,10 @@ module.exports = function (app, passport) {
     Category.find({}, function (error, categories) {
       if (error) {
         return res.
-          status(status.INTERNAL_SERVER_ERROR).
-          json({
-            error: error.toString()
-          });
+        status(status.INTERNAL_SERVER_ERROR).
+        json({
+          error: error.toString()
+        });
       }
       console.log("categories got!");
       res.json({
@@ -72,9 +72,9 @@ module.exports = function (app, passport) {
       .exec(function (error, products) {
         if (error) {
           return res.status(500).
-            json({
-              error: error.toString()
-            });
+          json({
+            error: error.toString()
+          });
         }
         res.json({
           products: products
@@ -101,8 +101,8 @@ module.exports = function (app, passport) {
   //取出User的Cart資料 (for <cart>)
   app.get('/cart/:email', function (req, res, next) {
     User.findOne({
-      email: req.params.email
-    })
+        email: req.params.email
+      })
       //因為product的type為ObjectId所以要populate
       .populate('data.cart.product')
       .exec(function (err, user) {
@@ -117,8 +117,8 @@ module.exports = function (app, passport) {
   // 載入User資料
   app.get('/user/:email', function (req, res, next) {
     User.findOne({
-      email: req.params.email
-    })
+        email: req.params.email
+      })
       //因為product的type為ObjectId所以要populate
       .populate('data.cart.product')
       .exec(function (err, user) {
@@ -181,19 +181,21 @@ module.exports = function (app, passport) {
 
     //建立user資料
     Stripe.customers.create({
-      email: req.body.userEmail,
-      source: req.body.tokenId//從前端傳入的tokenId
-    })
-      .then(customer =>//建立charge資料
+        email: req.body.userEmail,
+        source: req.body.tokenId //從前端傳入的tokenId
+      })
+      .then(customer => //建立charge資料
         Stripe.charges.create({
-          amount: Math.ceil(req.body.amount * 100),//Stripe的價格要用cents所以x100且四捨五入
+          amount: Math.ceil(req.body.amount * 100), //Stripe的價格要用cents所以x100且四捨五入
           description: "Example charge from kuolun",
           currency: "usd",
           customer: customer.id
         }))
       .then(charge => {
         // res.json(charge)
-        User.findOne({ email: user.email }, function (err, user) {
+        User.findOne({
+          email: user.email
+        }, function (err, user) {
           // 清空DB購物車
           user.data.cart = [];
           user.data.totalValue = 0;
@@ -216,35 +218,26 @@ module.exports = function (app, passport) {
    * add new user from Auth0
    */
   app.post('/newUser', function (req, res, next) {
+    console.log(typeof req.body);
     var profile = req.body;
-    //用email看是否user已存在DB
-    User.findOne({
-      email: profile.email
-    }, function (err, user) {
-      //如果有錯就回傳錯誤
+    var newUser = new User();
+    //profile是Auth0回傳的資訊
+    newUser.clientID = profile.clientID;
+    newUser.email = profile.email;
+    newUser.profile.username = profile.name;
+    newUser.profile.picture = profile.picture;
+    //把新user存到DB
+    newUser.save(function (err, user) {
       if (err) {
-        console.log('DB error');
+        console.log('save error');
         throw err;
       }
-
-      var newUser = new User();
-      //profile是Auth0回傳的資訊
-      newUser.clientID = profile.clientID;
-      newUser.email = profile.email;
-      newUser.profile.username = profile.name;
-      newUser.profile.picture = profile.picture;
-      //把新user存到DB
-      newUser.save(function (err, user) {
-        if (err) {
-          console.log('save error');
-          throw err;
-        }
-        return res.json({
-          savedUser: user
-        });
+      console.log('new user created!');
+      return res.json({
+        savedUser: user
       });
-
     });
+
   });
 
   /**
