@@ -15,6 +15,11 @@
         <li><a [routerLink]="['/']">Home</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li *ngIf="auth.authenticated()">
+          <a routerLink="/checkout" class="glyphicon glyphicon-shopping-cart">
+            <span class="badge">{{sum()}}</span>
+          </a>
+        </li>
         <li><a *ngIf="!auth.authenticated()" (click)="auth.login()">LogIn</a></li>
         <li><a *ngIf="auth.authenticated()" (click)="auth.logout()">LogOut</a></li>
         <li><a *ngIf="auth.authenticated()" [routerLink]="['/profile']">Profile</a></li>
