@@ -1,10 +1,16 @@
-<div class="row">
-  <div class="col-md-2">
-    <img [src]="user.profile.picture" style="width:70%" alt="" class="img-circle">
+<div class="container">
+  <div class="page-header text-center">
+    <h1><span class="fa fa-anchor"></span> Profile Page</h1>
   </div>
-  <div class="col-md-10">
-    <h1>{{user.profile.username}}</h1>
-    <p>Email:{{user.email}}</p>
-    <p>clientID:{{user.clientID}}</p>
+  <div class="row">
+    <!-- FACEBOOK INFORMATION -->
+    <div class="col-sm-6 col-md-4">
+      <h3 class="text-primary"><span class="fa fa-facebook"></span> Account</h3>
+      <img src="{{user.profile.picture}}" class="img-circle img-responsive img-center">
+      <h1>{{user.name}}</h1>
+      <strong>email</strong>: {{user.email}}
+      <br>
+      <strong>clientID</strong>: {{user.clientID}}
+    </div>
   </div>
 </div>

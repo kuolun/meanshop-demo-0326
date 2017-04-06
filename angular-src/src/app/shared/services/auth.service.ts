@@ -21,10 +21,7 @@ export class AuthService {
     // authResults內會有JWT
     this.lock.on("authenticated", (authResult) => {
 
-      //authenticated包含登入及sign up
-
-
-
+      //authenticated包含登入及sign up成功
       //Auth0驗證過後，用accessToken取得user profile
       this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
         if (error) {
@@ -34,14 +31,12 @@ export class AuthService {
         //檢查是否為登入
         this.checkDBUser(profile)
           .subscribe(data => {
-            console.log(data.user)
             if (!data.user) {
               //如果db不存在此user
               //將Auth0提供的user profile存到DB
               this.createUser(profile)
                 .subscribe(
                 data => {
-                  console.log('save localstorage ...');
                   localStorage.setItem('id_token', authResult.idToken);
                   //db回傳的存到localStorage
                   localStorage.setItem('profile', JSON.stringify(data.savedUser));

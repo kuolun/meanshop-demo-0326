@@ -8,8 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
   user;
-  constructor(private auth: AuthService) {
-    this.user = this.auth.userProfile;
+  constructor(private _auth: AuthService) {
+    this.user = this._auth.userProfile;
   }
 
   ngOnInit() {

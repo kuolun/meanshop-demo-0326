@@ -17,9 +17,10 @@ export class NavbarComponent implements OnInit {
   countItem() {
     let itemCount = 0;
     //加總購物車item數
-    this._auth.userProfile.data.cart.forEach(item => {
-      itemCount += item.quantity;
-    });
+    this._auth.userProfile.data.cart
+      .forEach(item => {
+        itemCount += item.quantity;
+      });
     return itemCount;
   }
 
